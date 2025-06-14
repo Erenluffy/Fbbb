@@ -8,7 +8,7 @@ import random
 from .utils import STS
 from database import Db, db
 from .test import CLIENT, get_client, iter_messages
-from config import Config, temp, UPDATE
+from config import Config, temp
 from script import Script
 from pyrogram import Client, filters 
 from pyrogram.errors import FloodWait, MessageNotModified
@@ -237,7 +237,7 @@ async def edit(user, msg, title, status, sts):
    estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
    estimated_total_time = estimated_total_time if estimated_total_time != '' else '0 s'
    if status in ["cancelled", "completed"]:
-      button.append([InlineKeyboardButton('• ᴄᴏᴍᴘʟᴇᴛᴇᴅ ​•', url=UPDATE)])
+      button.append([InlineKeyboardButton('• ᴄᴏᴍᴘʟᴇᴛᴇᴅ ​•', url='https://t.me/SteveBotz')])
    else:
       button.append([InlineKeyboardButton('• ᴄᴀɴᴄᴇʟ', 'terminate_frwd')])
    await msg_edit(msg, text, InlineKeyboardMarkup(button))
