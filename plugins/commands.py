@@ -2,7 +2,7 @@ import os
 import sys
 import asyncio 
 from database import Db, db
-from config import Config, temp, UPDATE, SUPPORT
+from config import Config, temp
 from script import Script
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaDocument
@@ -13,8 +13,8 @@ from os import environ, execle, system
 START_TIME = time.time()
 
 main_buttons = [[
-    InlineKeyboardButton('🌥 Uᴘᴅᴀᴛᴇ 🌥', url=UPDATE),
-    InlineKeyboardButton('🍁 Sᴜᴘᴘᴏʀᴛ 🍁', url=SUPPORT)
+    InlineKeyboardButton('🌥 Uᴘᴅᴀᴛᴇ 🌥', url='https://t.me/SteveBotz'),
+    InlineKeyboardButton('🍁 Sᴜᴘᴘᴏʀᴛ 🍁', url='https://t.me/steveBotzSupport')
 ],[
     InlineKeyboardButton('Hᴇʟᴘ 🌺', callback_data='help'),
     InlineKeyboardButton('Aʙᴏᴜᴛ 💌', callback_data='about')
