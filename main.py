@@ -1,17 +1,31 @@
-# Don't Remove Credit Tg - @VJ_Botz
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
-
-import asyncio, logging
+import asyncio, logging, requests
 from config import Config
 from pyrogram import Client as VJ, idle
 from typing import Union, Optional, AsyncGenerator
 from logging.handlers import RotatingFileHandler
 from plugins.regix import restart_forwards
+from aiohttp import ClientSession
 
-# Don't Remove Credit Tg - @VJ_Botz
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
+# Keep alive function to ping Render URL
+async def keep_alive():
+    """
+    Ping the Render URL every 20 seconds to keep the bot alive
+    """
+    while True:
+        try:
+            # Replace with your actual Render URL
+            RENDER_URL = ""  # Change this to your actual Render URL
+            async with ClientSession() as session:
+                async with session.get(RENDER_URL) as response:
+                    if response.status == 200:
+                        print("Keep-alive ping successful")
+                    else:
+                        print(f"Keep-alive ping failed with status: {response.status}")
+        except Exception as e:
+            print(f"Keep-alive error: {e}")
+        
+        # Wait for 20 seconds before next ping
+        await asyncio.sleep(20)
 
 if __name__ == "__main__":
     VJBot = VJ(
@@ -64,12 +78,15 @@ if __name__ == "__main__":
     async def main():
         await VJBot.start()
         bot_info  = await VJBot.get_me()
+        
+        # Start keep-alive task
+        keep_alive_task = asyncio.create_task(keep_alive())
+        
         await restart_forwards(VJBot)
-        print("Bot Started.")
+        print("Bot Started with keep-alive functionality.")
         await idle()
+        
+        # Cancel keep-alive task when bot stops
+        keep_alive_task.cancel()
 
     asyncio.get_event_loop().run_until_complete(main())
-
-# Don't Remove Credit Tg - @VJ_Botz
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
