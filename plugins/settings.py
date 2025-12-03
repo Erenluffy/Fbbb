@@ -22,7 +22,7 @@ async def settings_query(bot, query):
   buttons = [[InlineKeyboardButton('back', callback_data="settings#main")]]
   if type=="main":
      await query.message.edit_text(
-       "<b>Hᴇʀᴇ Is Tʜᴇ Sᴇᴛᴛɪɴɢs Pᴀɴᴇʟ⚙\n\nᴄʜᴀɴɢᴇ ʏᴏᴜʀ sᴇᴛᴛɪɴɢs ᴀs ʏᴏᴜʀ �ᴡɪsʜ 👇</b>",
+       "<b>Hᴇʀᴇ Is Tʜᴇ Sᴇᴛᴛɪɴɢs Pᴀɴᴇʟ⚙\n\nᴄʜᴀɴɢᴇ ʏᴏᴜʀ sᴇᴛᴛɪɴɢs ᴀs ʏᴏᴜʀ ᴡɪsʜ 👇</b>",
        reply_markup=main_buttons())
   elif type=="extra":
        await query.message.edit_text(
@@ -197,90 +197,107 @@ async def settings_query(bot, query):
      await caption.reply_text(
         "<b>successfully updated</b>",
         reply_markup=InlineKeyboardMarkup(buttons))
-   elif type=="replace_caption":
-           buttons = []
-           data = await get_configs(user_id)
-           replace_rules = data.get('replace_rules', None)
-           if replace_rules is None:
-               buttons.append([InlineKeyboardButton('✚ Add Replace Rules ✚', 
-                             callback_data="settings#add_replace_rules")])
-           else:
-               buttons.append([InlineKeyboardButton('👀 See Rules', 
-                             callback_data="settings#see_replace_rules")])
-               buttons[-1].append(InlineKeyboardButton('🗑️ Delete Rules', 
-                             callback_data="settings#delete_replace_rules"))
-           buttons.append([InlineKeyboardButton('back', 
-                             callback_data="settings#main")])
-           await query.message.edit_text(
-               """<b><u>REPLACE CAPTION RULES</b></u>
-               
-   <b>Replace specific words/phrases in captions during forwarding.</b>
-   
-   <b>Format:</b>
-   <code>old_text:new_text</code>
-   
-   <b>Multiple rules (one per line):</b>
-   <code>@Animes2u:@OtakusFlix
-   Channel A:Channel B
-   oldword:newword</code>""",
-               reply_markup=InlineKeyboardMarkup(buttons))
-   
-       elif type=="see_replace_rules":
-           data = await get_configs(user_id)
-           replace_rules = data.get('replace_rules', None)
-           text = "<b><u>Your Replace Rules:</b></u>\n\n"
-           if replace_rules:
-               for rule in replace_rules:
-                   text += f"<code>{rule['old']}</code> → <code>{rule['new']}</code>\n"
-           else:
-               text += "No rules set"
-           buttons = [[InlineKeyboardButton('🖋️ Edit Rules', 
-                         callback_data="settings#add_replace_rules")],
-                      [InlineKeyboardButton('back', 
-                         callback_data="settings#replace_caption")]]
-           await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup(buttons))
-   
-       elif type=="delete_replace_rules":
-           await update_configs(user_id, 'replace_rules', None)
-           await query.message.edit_text(
-               "<b>Replace rules deleted successfully</b>",
-               reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('back', 
-                   callback_data="settings#replace_caption")]]))
-   
-       elif type=="add_replace_rules":
-           await query.message.delete()
-           ask = await bot.ask(user_id, 
-               """<b>Send your replace rules (one per line):</b>
-   
-   <b>Format:</b>
-   <code>old_text:new_text</code>
-   
-   <b>Example:</b>
-   <code>@Animes2u:@OtakusFlix
-   Channel A:Channel B
-   #oldtag:#newtag</code>
-   
-   Send /cancel to cancel""")
-           
-           if ask.text == "/cancel":
-               return await ask.reply_text(
-                   "<b>Process cancelled</b>",
-                   reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('back', 
-                       callback_data="settings#replace_caption")]]))
-           
-           rules = []
-           lines = ask.text.split('\n')
-           for line in lines:
-               if ':' in line:
-                   old, new = line.split(':', 1)
-                   if old.strip() and new.strip():
-                       rules.append({'old': old.strip(), 'new': new.strip()})
-           
-           await update_configs(user_id, 'replace_rules', rules if rules else None)
-           await ask.reply_text(
-               f"<b>Successfully updated {len(rules)} replace rules</b>",
-               reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('back', 
-                   callback_data="settings#replace_caption")]]))
+
+  elif type == "replace_caption":
+     buttons = []
+     data = await get_configs(user_id)
+     replace_rules = data.get('replace_rules', None)
+
+     if replace_rules is None:
+        buttons.append([InlineKeyboardButton(
+            '✚ Add Replace Rules ✚',
+            callback_data="settings#add_replace_rules"
+        )])
+     else:
+        buttons.append([InlineKeyboardButton(
+            '👀 See Rules',
+            callback_data="settings#see_replace_rules"
+        )])
+        buttons[-1].append(InlineKeyboardButton(
+            '🗑️ Delete Rules',
+            callback_data="settings#delete_replace_rules"
+        ))
+
+     buttons.append([InlineKeyboardButton('back', callback_data="settings#main")])
+
+     await query.message.edit_text(
+        """<b><u>REPLACE CAPTION RULES</b></u>
+
+<b>Replace specific words/phrases in captions during forwarding.</b>
+
+<b>Format:</b>
+<code>old_text:new_text</code>
+
+<b>Multiple rules (one per line):</b>
+<code>@Animes2u:@OtakusFlix
+Channel A:Channel B
+oldword:newword</code>""",
+        reply_markup=InlineKeyboardMarkup(buttons)
+     )
+
+  elif type == "see_replace_rules":
+     data = await get_configs(user_id)
+     replace_rules = data.get('replace_rules', None)
+     text = "<b><u>Your Replace Rules:</b></u>\n\n"
+
+     if replace_rules:
+        for rule in replace_rules:
+            text += f"<code>{rule['old']}</code> → <code>{rule['new']}</code>\n"
+     else:
+        text += "No rules set"
+
+     buttons = [
+        [InlineKeyboardButton('🖋️ Edit Rules', callback_data="settings#add_replace_rules")],
+        [InlineKeyboardButton('back', callback_data="settings#replace_caption")]
+     ]
+     await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup(buttons))
+
+  elif type == "delete_replace_rules":
+     await update_configs(user_id, 'replace_rules', None)
+     await query.message.edit_text(
+        "<b>Replace rules deleted successfully</b>",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton('back', callback_data="settings#replace_caption")]
+        ])
+     )
+
+  elif type == "add_replace_rules":
+     await query.message.delete()
+     ask = await bot.ask(user_id, """<b>Send your replace rules (one per line):</b>
+
+<b>Format:</b>
+<code>old_text:new_text</code>
+
+<b>Example:</b>
+<code>@Animes2u:@OtakusFlix
+Channel A:Channel B
+#oldtag:#newtag</code>
+
+Send /cancel to cancel""")
+
+     if ask.text == "/cancel":
+        return await ask.reply_text(
+            "<b>Process cancelled</b>",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton('back', callback_data="settings#replace_caption")]
+            ])
+        )
+
+     rules = []
+     lines = ask.text.split('\n')
+     for line in lines:
+        if ':' in line:
+            old, new = line.split(':', 1)
+            if old.strip() and new.strip():
+                rules.append({'old': old.strip(), 'new': new.strip()})
+
+     await update_configs(user_id, 'replace_rules', rules if rules else None)
+     await ask.reply_text(
+        f"<b>Successfully updated {len(rules)} replace rules</b>",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton('back', callback_data="settings#replace_caption")]
+        ])
+     )
 
   elif type=="button":
      buttons = []
@@ -516,7 +533,7 @@ async def settings_query(bot, query):
     btn.append([InlineKeyboardButton('Remove all', 'settings#rmve_all_keyword')])
     btn.append([InlineKeyboardButton('Back', 'settings#extra')])
     await query.message.edit_text(
-        text=f"<b><u>Keywords</u></b>\n\n**Files with these keywords in file name only forwad**\n\n{text}",
+        text=f"<b><u>Keywords</u></b>\n\n**Files with these keywords in file name only forwad</b>\n\n{text}",
         reply_markup=InlineKeyboardMarkup(btn))
 
   elif type == "rmve_all_keyword":
