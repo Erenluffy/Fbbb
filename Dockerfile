@@ -1,4 +1,4 @@
-FROM python:3.10.8-slim-buster
+FROM python:3.11-slim-buster
 
 RUN apt update && apt upgrade -y
 RUN apt install git -y
@@ -10,3 +10,4 @@ RUN mkdir /VJ-Forward-Bot
 WORKDIR /VJ-Forward-Bot
 COPY . /VJ-Forward-Bot
 CMD gunicorn app:app & python3 main.py
+
