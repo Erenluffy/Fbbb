@@ -206,7 +206,79 @@ class Db:
         if user:
             return user.get('details', defult)
         return defult
-   
+       # Add these methods to your Db class
+    
+    async def add_to_queue(self, user_id: int, queue_data: dict):
+        """Add task to queue"""
+        query = """
+        INSERT INTO user_queue (user_id, queue_id, data, status, priority, added_time)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        """
+        await self.con.execute(
+            query, user_id, queue_data['queue_id'], 
+            json.dumps(queue_data), 'pending',
+            queue_data.get('priority', 'normal'), time.time()
+        )
+    
+    async def get_user_queue(self, user_id: int) -> List[dict]:
+        """Get user's queue"""
+        query = "SELECT data FROM user_queue WHERE user_id = $1 ORDER BY added_time"
+        rows = await self.con.fetch(query, user_id)
+        return [json.loads(row['data']) for row in rows]
+    
+    async def update_queue_status(self, user_id: int, queue_id: str, status: str):
+        """Update queue status"""
+        query = "UPDATE user_queue SET status = $1 WHERE user_id = $2 AND queue_id = $3"
+        await self.con.execute(query, status, user_id, queue_id)
+    
+    async def remove_from_queue(self, user_id: int, queue_id: str) -> bool:
+        """Remove from queue"""
+        query = "DELETE FROM user_queue WHERE user_id = $1 AND queue_id = $2"
+        await self.con.execute(query, user_id, queue_id)
+        return True
+    
+    async def clear_user_queue(self, user_id: int) -> bool:
+        """Clear user's queue"""
+        query = "DELETE FROM user_queue WHERE user_id = $1"
+        await self.con.execute(query, user_id)
+        return True
+    
+    async def add_schedule(self, user_id: int, schedule_data: dict):
+        """Add scheduled task"""
+        query = """
+        INSERT INTO user_schedule (user_id, schedule_id, data, scheduled_time, repeat)
+        VALUES ($1, $2, $3, $4, $5)
+        """
+        await self.con.execute(
+            query, user_id, schedule_data['schedule_id'], 
+            json.dumps(schedule_data), schedule_data['scheduled_time'],
+            schedule_data.get('repeat', 'none')
+        )
+    
+    # Also add table creation SQL:
+    """
+    CREATE TABLE IF NOT EXISTS user_queue (
+        id SERIAL PRIMARY KEY,
+        user_id BIGINT NOT NULL,
+        queue_id VARCHAR(100) NOT NULL,
+        data JSONB NOT NULL,
+        status VARCHAR(20) DEFAULT 'pending',
+        priority VARCHAR(10) DEFAULT 'normal',
+        added_time DOUBLE PRECISION NOT NULL,
+        completed_time DOUBLE PRECISION
+    );
+    
+    CREATE TABLE IF NOT EXISTS user_schedule (
+        id SERIAL PRIMARY KEY,
+        user_id BIGINT NOT NULL,
+        schedule_id VARCHAR(100) NOT NULL,
+        data JSONB NOT NULL,
+        scheduled_time DOUBLE PRECISION NOT NULL,
+        repeat VARCHAR(20) DEFAULT 'none',
+        last_run DOUBLE PRECISION,
+        enabled BOOLEAN DEFAULT TRUE
+    );
+    """
     async def update_forward(self, user_id, details):
         await self.nfy.update_one({'user_id': user_id}, {'$set': {'details': details}})
         
