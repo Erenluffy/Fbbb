@@ -267,20 +267,38 @@ async def send(bot, user, text):
    except:
       pass
 
-def custom_caption(msg, caption):
-  if msg.media:
-    if (msg.video or msg.document or msg.audio or msg.photo):
-      media = getattr(msg, msg.media.value, None)
-      if media:
-        file_name = getattr(media, 'file_name', '')
-        file_size = getattr(media, 'file_size', '')
-        fcaption = getattr(msg, 'caption', '')
-        if fcaption:
-          fcaption = fcaption.html
-        if caption:
-          return caption.format(filename=file_name, size=get_size(file_size), caption=fcaption)
-        return fcaption
-  return None
+def custom_caption(msg, caption, replace_rules=None):
+    if msg.media:
+        if (msg.video or msg.document or msg.audio or msg.photo):
+            media = getattr(msg, msg.media.value, None)
+            if media:
+                file_name = getattr(media, 'file_name', '')
+                file_size = getattr(media, 'file_size', '')
+                fcaption = getattr(msg, 'caption', '')
+                if fcaption:
+                    fcaption = fcaption.html
+                
+                # Apply custom caption template
+                if caption:
+                    new_caption = caption.format(
+                        filename=file_name, 
+                        size=get_size(file_size), 
+                        caption=fcaption
+                    )
+                else:
+                    new_caption = fcaption
+                
+                # Apply replace rules if any
+                if replace_rules and new_caption:
+                    for rule in replace_rules:
+                        old_text = rule.get('old', '')
+                        new_text = rule.get('new', '')
+                        if old_text and new_text:
+                            new_caption = new_caption.replace(old_text, new_text)
+                
+                return new_caption
+    return None
+
 
 def get_size(size):
   units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB"]
