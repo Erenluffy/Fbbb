@@ -8,6 +8,7 @@ from pyrogram import Client as VJ, idle
 from typing import Union, Optional, AsyncGenerator
 from logging.handlers import RotatingFileHandler
 from plugins.regix import restart_forwards
+from plugins import init_all_plugins, cleanup_all_plugins  # Import from plugins
 
 # Don't Remove Credit Tg - @VJ_Botz
 # Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
@@ -22,35 +23,14 @@ if __name__ == "__main__":
         sleep_threshold=120,
         plugins=dict(root="plugins")
     )  
+    
     async def iter_messages(
         self,
         chat_id: Union[int, str],
         limit: int,
         offset: int = 0,
     ) -> Optional[AsyncGenerator["types.Message", None]]:
-        """Iterate through a chat sequentially.
-        This convenience method does the same as repeatedly calling :meth:`~pyrogram.Client.get_messages` in a loop, thus saving
-        you from the hassle of setting up boilerplate code. It is useful for getting the whole chat messages with a
-        single call.
-        Parameters:
-            chat_id (``int`` | ``str``):
-                Unique identifier (int) or username (str) of the target chat.
-                For your personal cloud (Saved Messages) you can simply use "me" or "self".
-                For a contact that exists in your Telegram address book you can use his phone number (str).
-                
-            limit (``int``):
-                Identifier of the last message to be returned.
-                
-            offset (``int``, *optional*):
-                Identifier of the first message to be returned.
-                Defaults to 0.
-        Returns:
-            ``Generator``: A generator yielding :obj:`~pyrogram.types.Message` objects.
-        Example:
-            .. code-block:: python
-                for message in app.iter_messages("pyrogram", 1, 15000):
-                    print(message.text)
-        """
+        """Iterate through a chat sequentially."""
         current = offset
         while True:
             new_diff = min(200, limit - current)
@@ -60,14 +40,33 @@ if __name__ == "__main__":
             for message in messages:
                 yield message
                 current += 1
-               
+    
     async def main():
         await VJBot.start()
         bot_info  = await VJBot.get_me()
+        
+        # Initialize all plugins including dump manager
+        await init_all_plugins(VJBot)
+        
+        # Restart any pending forwards
         await restart_forwards(VJBot)
+        
         print("Bot Started.")
         await idle()
+        
+        # Cleanup on exit
+        await cleanup_all_plugins()
 
+    # Configure logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        handlers=[
+            RotatingFileHandler("bot.log", maxBytes=5000000, backupCount=10),
+            logging.StreamHandler()
+        ]
+    )
+    
     asyncio.get_event_loop().run_until_complete(main())
 
 # Don't Remove Credit Tg - @VJ_Botz
