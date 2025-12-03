@@ -13,8 +13,8 @@ from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, ChatAdmin
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, Message
 
 # Import dump manager
-from dump_channel import dump_manager
-from test import CLIENT, get_client, iter_messages, parse_buttons
+from plugins.dump_channel import dump_manager
+from plugins.test import CLIENT, get_client, iter_messages, parse_buttons
 
 CLIENT = CLIENT()
 
