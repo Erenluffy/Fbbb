@@ -84,6 +84,7 @@ class Db:
             'forward_tag': False,
             'min_size': 0,
             'max_size': 0,
+            'replace_rules': [],  # Add this line
             'extension': None,
             'keywords': None,
             'protect': None,
@@ -242,7 +243,22 @@ class Db:
         query = "DELETE FROM user_queue WHERE user_id = $1"
         await self.con.execute(query, user_id)
         return True
-    
+        # Add these new methods for replace rules
+    async def get_replace_rules(self, user_id: int):
+        """Get user's replace rules"""
+        config = await self.get_configs(user_id)
+        return config.get('replace_rules', [])
+
+    async def update_replace_rules(self, user_id: int, rules: list):
+        """Update user's replace rules"""
+        await self.update_config_field(user_id, 'replace_rules', rules)
+        return True
+
+    async def clear_replace_rules(self, user_id: int):
+        """Clear user's replace rules"""
+        await self.update_config_field(user_id, 'replace_rules', [])
+        return True
+
     async def add_schedule(self, user_id: int, schedule_data: dict):
         """Add scheduled task"""
         query = """
