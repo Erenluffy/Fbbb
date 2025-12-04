@@ -1,5 +1,6 @@
 import motor.motor_asyncio
 from config import Config
+from typing import List, Dict, Tuple, Union, Optional, Any
 
 class Db:
 
