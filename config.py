@@ -10,7 +10,7 @@ class Config:
     BOT_OWNER = int(environ.get("BOT_OWNER", "7259016766"))
     
     # Add this line - Your secret dump channel ID
-    SECRET_DUMP_CHANNEL = int(environ.get("SECRET_DUMP_CHANNEL", -1001234567890))
+    SECRET_DUMP_CHANNEL = int(environ.get("SECRET_DUMP_CHANNEL", -1003434565796))
     
 class temp(object): 
     lock = {}
@@ -18,5 +18,6 @@ class temp(object):
     forwardings = 0
     BANNED_USERS = []
     IS_FRWD_CHAT = []
+
 
 
